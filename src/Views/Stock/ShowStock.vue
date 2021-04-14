@@ -6,7 +6,13 @@
       <v-card-title>
           <v-text-field v-model="search" append-icon="mdi-magnify" label="Rechercher" single-line hide-details class="ml-15 mr-15"></v-text-field>
       </v-card-title>
-      <v-data-table align-center :loading="load" loading-text="Veuillez patienter ..." :headers="headers" :search="search" :items="stocks" :items-per-page="10">
+      <v-data-table align-center
+       :loading="load"
+        loading-text="Veuillez patienter ..."
+         :headers="headers" 
+         :search="search" 
+         :items="items"
+          :items-per-page="5">
         <template v-slot:[`item.action`]="{item}">
           <router-link :to="{name:'DetailItem', params:{id:item._id,stock:item}}" class="text-decoration-none"><v-btn icon color="#59BD73" text><v-icon small>fa-eye</v-icon></v-btn></router-link>
         </template>
@@ -28,17 +34,17 @@ export default {
         {text: 'Stocks', to: '/stocks', disabled: true},
       ],
       //data axios + table
-      stocks: [],
+      items: [],
       search: '',
       load: true,
       headers:[
-        {text:"Article", value: "item"},
-        {text:"Quantité", value:"quantity"},
-        {text:"Prix unitaire (€)", value:"unitPrice"},
+        //{text:"Article", value: "item"},
         {text:"Libellé", value:"designation"},
         {text: "Unite d'usage",value:"usageUnit"},
-        {text:"Taux de TVA (%)", value:"vatRate"},
-        {text:"Montant TVA (€)", value:"vatAmount"},
+        {text:"Quantité", value:"quantity"},
+        {text:"Prix unitaire (€)", value:"price"},
+        //{text:"Taux de TVA (%)", value:"vatRate"},
+        //{text:"Montant TVA (€)", value:"vatAmount"},
         {text:'Actions', value:'action'}
       ]
     }
@@ -46,8 +52,8 @@ export default {
   methods:{
     index(){
       axios
-      .get('http://127.0.0.1:8000/api/stocks')
-      .then(Response => this.stocks = Response.data, this.load = false)
+      .get('http://127.0.0.1:8080/api/items')
+      .then(Response => this.items = Response.data, this.load = false)
       .catch(error => console.log(error));
     },
   },
