@@ -19,8 +19,6 @@ import EditProject from './Views/Project/EditProject.vue'
 import ShowProject from './Views/Project/ShowProject.vue'
 import DetailProject from './Views/Project/DetailProject.vue'
 //pages stock
-import AddStock from './Views/Stock/AddStock.vue'
-import EditStock from './Views/Stock/EditStock.vue'
 import ShowStock from './Views/Stock/ShowStock.vue'
 import DetailItem from './Views/Stock/DetailItem.vue'
 
@@ -102,16 +100,6 @@ export default new Router({
       path: '/stocks',
       name: 'ShowStock',
       component: ShowStock 
-    },
-    {
-      path: '/stocks/modifier',
-      name: 'EditStock',
-      component: EditStock
-    },
-    {
-      path: '/stocks/ajouter/:id',
-      name: 'AddStock',
-      component: AddStock
     },
     {
       path: '/stocks/details',

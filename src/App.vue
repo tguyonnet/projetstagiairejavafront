@@ -60,8 +60,6 @@
 
 
 <script>
-import axios from 'axios';
-
 export default {
   name: 'App',
   data() {
@@ -97,28 +95,7 @@ export default {
         localStorage.setItem("dark_theme", this.$vuetify.theme.dark.toString());
         localStorage.setItem("colorSidebar", this.sidebar.toString());
         localStorage.setItem("colorIconMenu", this.iconMenu.toString());
-
     },
-    indexProjects() {
-      axios.get('http://127.0.0.1:8000/api/project/')
-        .then(Response => (this.projects = Response.data.data, this.$store.commit('saveListProject', Response.data.data), console.log('Liste des projects : ', Response.data.data)))
-        .catch(error => console.log("err =" + error));
-        
-    },
-    indexQuotes() {
-      axios.get('http://127.0.0.1:8000/api/quotes/')
-      .then(response => (this.quotes = response.data.data, this.$store.commit('saveListQuote', response.data.data), console.log('Liste des devis : ', response.data.data)))
-    },
-    indexCustomers() {
-      axios.get('http://127.0.0.1:8000/api/customer/')
-        .then(response => (this.customer = response.data.data, this.$store.commit('saveListCustomer', response.data.data),console.log('Liste des clients : ', response.data.data))) 
-        .catch(error => console.log("err =" + error));
-    },
-  },
-  created() {
-    this.indexProjects()
-    this.indexCustomers()
-    this.indexQuotes()
   },
   mounted() {
     //récup le dernier theme choisi
