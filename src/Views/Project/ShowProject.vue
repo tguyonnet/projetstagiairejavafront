@@ -69,7 +69,7 @@ export default {
     //affiche tous les projets en recuperant dans local Storage
     indexProject() {
         axios.get('http://127.0.0.1:8080/api/projects')
-        .then(Response => (this.projects = Response.data, /*this.$store.commit('saveListProject', Response.data.data),*/localStorage.setItem('projectList', JSON.stringify(Response.data.data)), console.log('Liste des projects : ', Response.data)))
+        .then(Response => (this.projects = Response.data, /*this.$store.commit('saveListProject', Response.data.data),*/localStorage.setItem('projectList', JSON.stringify(Response.data)), console.log('Liste des projects : ', Response.data)))
         .catch(error => console.log("err =" + error));
       this.load = false
    },
@@ -81,18 +81,19 @@ export default {
     },
 
     //suppression du projet choisi
-    deleteItem() {
+   deleteItem() {
       //recupere un seul projet
       const index = this.projects.indexOf(this.itemToDelete).toString() 
       //supprime la ligne sur le front   
       this.projects.splice(index, 1)
       //charge la liste des projets dans le localStorage
-      this.$store.commit('saveListProject',this.projects)
+      localStorage.setItem('projectList', JSON.stringify(this.projects))
       this.dialog = false
       //supprime le projet par le back dans la bdd
-      axios.get('http://127.0.0.1:8000/api/project/delete/' + this.itemToDelete._id)
-      .then(this.$store.commit('saveListProject',this.projects))
+      axios.get('http://127.0.0.1:8080/api/project/delete/' + this.itemToDelete._id)
+      .then(localStorage.setItem('projectList', JSON.stringify(this.projects)))
       .catch(error => console.log("ERREUR : ", error));
+      console.log(this.itemToDelete._id)
     },
   },
 
