@@ -28,7 +28,7 @@
                       <v-card-text class="d-flex justify-start">N° client: {{ customer._id }}</v-card-text> 
                     </v-col>
                     <v-col cols="6">
-                        <v-card-text class="d-flex justify-start">Nom de famille : {{ customer.name }}</v-card-text>
+                        <v-card-text class="d-flex justify-start">Nom de famille : {{ customer.nom }}</v-card-text>
                     </v-col>
                   </v-row>
                   <!-- ligne 2 mockup  -->
@@ -52,16 +52,16 @@
                   <!-- ligne 1 mockup  -->
                   <v-row  >
                     <v-col cols="6" >
-                      <v-card-text class="d-flex justify-start"> Adresse : {{ customer.address.address }}</v-card-text>
+                      <v-card-text class="d-flex justify-start"> Adresse : {{ customer.address }}</v-card-text>
                     </v-col>
                     <v-col cols="6" >
-                      <v-card-text class="d-flex justify-start" > Code postal : {{ customer.address.postCode }}</v-card-text>
+                      <v-card-text class="d-flex justify-start" > Code postal : {{ customer.postCode }}</v-card-text>
                     </v-col>
                   </v-row>
                   <!-- ligne 2 mockup  -->
                   <v-row >
                     <v-col cols="6">
-                      <v-card-text class="d-flex justify-start"> Ville : {{ customer.address.city }}</v-card-text>
+                      <v-card-text class="d-flex justify-start"> Ville : {{ customer.city }}</v-card-text>
                     </v-col>
                   </v-row>
                   <!-- Partie Coordonnées -->
@@ -116,7 +116,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+const axios = require('axios');
 
 export default {
   name: 'DetailCustomer',
@@ -142,40 +142,40 @@ export default {
       load:false,
       projectsOneCustomer:[],
       quotesOneCustomer:[],
+      quotes: [],
       affichage:1,
       search: '',
       textLoad:"Chargement... Veuillez patienter",
       breadcrumbs: [
         {text: 'Accueil', to: '/', exact:true},
         {text: 'Clients', to: "/clients", exact:true},
-        {text: 'Visualisation Client'},
+        {text: 'Détails d\'un client'},
       ],
+      listQuote:[],
+      listProject:[],
     }
   },
-  computed: {
-    ...mapGetters(['projectsOfOneCustomer','quoteOfOneCustomer'])
-  },
+
   mounted(){
-      //copie de la varibale props a la premiere connexion (sinon erreur vue interdis la modif d'une props)
-      // let variableCustomerProps = this.customer
-      //si undefined
-      if(this.customer == null){
-        //cas F5
-        //on récupere le dernier objet stockée dans le local storage
-        this.customer  = this.$store.state.oneCustomer
-      }else{
-        //on sauvegarde l'objet  dans le local storage (permet de le retrouver si on fait un F5)
-        this.$store.commit('saveOneCustomer',this.customer)
-      }
-      this.getAllProject()
+     console.log(this.customer)
+     this.getAllProject()
       this.getAllQuote()
 
       this.loading = false 
   },
   methods: {
     getAllProject(){
+
       //retourne la liste des projets d'un client
-      this.projectsOneCustomer = this.projectsOfOneCustomer(this.customer._id)
+      var idCustomer
+      idCustomer = this.customer._id
+       axios.get('http://localhost:8080/api/projects')
+        .then(Response => (
+          this.quotes = Response.data, 
+          console.log(Response.data),
+          this.projectsOneCustomer =  this.quotes.filter(function(item) {return item.customer._id == idCustomer ;})
+          ))
+        .catch(error => console.log(error));
       //change le texte du chargement en cas d'inexsitance de données
       if(this.projectsOneCustomer.length >0){
         this.textLoad = ''
@@ -184,8 +184,18 @@ export default {
       }
     },
     getAllQuote(){
+      var idCustomer
+      idCustomer = this.customer._id
       //retourne la liste des devis d'un client
-      this.quotesOneCustomer = this.quoteOfOneCustomer(this.customer._id)
+      axios.get('http://localhost:8080/api/quotes')
+        .then(Response => (
+          this.quotes = Response.data, 
+          console.log(Response.data),
+          this.quotesOneCustomer =  this.quotes.filter(function(item) {return item.customer._id == idCustomer;})
+          ))
+        .catch(error => console.log(error));
+
+      
       //change le texte du chargement en cas d'inexsitance de données
       if(this.quotesOneCustomer.length >0){
         this.textLoad = ''
@@ -193,6 +203,13 @@ export default {
         this.textLoad = 'Aucun devis' //'Aucune données'
       }
     }
-  }
+
+      
+
+  },
+  props: [
+    'fromPage',
+  ]
+  
 }
 </script>
