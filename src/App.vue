@@ -42,7 +42,7 @@
         <!-- Appel des vues -->
         <router-view/>
         <!-- Footer -->
-        <v-footer padless v-bind="fixed">
+        <v-footer padless>
           <v-card flat tile width="100%" class="lighten-1 text-center">
             <v-card-text>
               <v-btn v-for="link in links" :key="link.text" router :to="link.route" text class="text-decoration-none"> {{ link.text }} </v-btn>

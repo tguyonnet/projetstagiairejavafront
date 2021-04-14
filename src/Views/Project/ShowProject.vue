@@ -55,9 +55,9 @@ export default {
       headers: [
         { text: "Date création", value: "created_at" },
         { text: "Nom", value: "name" },
-        { text: "Adresse chantier", value: "projectSite.address" },
-        { text: "CP", value: "projectSite.postCode" },
-        { text: "Ville", value: "projectSite.city" },
+        { text: "Adresse chantier", value: "address" },
+        { text: "CP", value: "postCode" },
+        { text: "Ville", value: "city" },
         { text: "Date du chantier", value: "dateBeginSite" },
         { text: "Statut", value: "state" },
         { text: "Actions", value: "actions" },
@@ -68,7 +68,9 @@ export default {
   methods: {
     //affiche tous les projets en recuperant dans local Storage
     indexProject() {
-      this.projects = this.$store.state.listProject
+        axios.get('http://127.0.0.1:8080/api/projects')
+        .then(Response => (this.projects = Response.data, /*this.$store.commit('saveListProject', Response.data.data),*/localStorage.setItem('projectList', JSON.stringify(Response.data.data)), console.log('Liste des projects : ', Response.data)))
+        .catch(error => console.log("err =" + error));
       this.load = false
    },
 
