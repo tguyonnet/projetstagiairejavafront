@@ -8,9 +8,8 @@
         <v-card-title class="font-weight-black">Informations générales : </v-card-title>
         <v-card-actions>Référence projet: {{ project._id }}</v-card-actions>
         <v-card-actions>Libellé projet : {{ project.name }}</v-card-actions>
-        <v-card-actions>Initiateur du projet : {{ project.customer }}</v-card-actions>
-        <v-card-actions>Employé de soutien : {{ project.salesman }}</v-card-actions>
-        <v-card-actions>Adresse du chantier : {{ project.projectSite.address }} {{ project.projectSite.postCode }}, {{ project.projectSite.city }}</v-card-actions>
+        <v-card-actions>Initiateur du projet : {{ project.customer.name }} {{ project.customer.firstName }}</v-card-actions>
+        <v-card-actions>Adresse du chantier : {{ project.address }} {{ project.postCode }}, {{ project.city }}</v-card-actions>
         <v-card-actions>Date de début de chantier : {{ project.dateBeginSite }}</v-card-actions>
 
         <hr>
@@ -47,17 +46,19 @@ export default {
     }
   },
 
-  mounted() {
+   mounted() {
     if(this.project == null){
-      //Recupération du dernier object project (cas F5) 
-      this.project = this.$store.state.oneProject 
+            //Recupération du dernier object project (cas F5) 
+            // this.project = this.$store.state.oneProject
+            this.project  = JSON.parse(localStorage.getItem('a_project'));
     } 
     else{
-      //Stockage de l'objet project dans le localStorage
-      this.$store.commit('saveOneProject',this.project)
+            //Stockage de l'objet project dans le localStorage
+            // this.$store.commit('saveOneProject', this.project)
+            localStorage.setItem('a_project', JSON.stringify(this.project));
     }
     //lors du F5 --> récupération du dernier objet projet stocké précédemment
     this.aProject = this.project;
-  }
+  },
 }
 </script>
