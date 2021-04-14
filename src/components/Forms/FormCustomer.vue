@@ -3,7 +3,7 @@
         <div id="app">
             <v-row >
                 <v-col cols="1">
-                    <v-btn  text  @click="cancel(0)"><v-icon x-large>mdi-undo-variant</v-icon></v-btn>
+                    <v-btn  text  @click="cancel(1)"><v-icon x-large>mdi-undo-variant</v-icon></v-btn>
                 </v-col>
                 <v-col cols="9">
                     <h1>{{ title }}</h1> 
@@ -14,7 +14,7 @@
                     <v-card-text >
                         <v-row justify="center" >
                             <v-col cols="1" sm="3">
-                                <v-text-field ref="name" v-model="customer.name" :rules="fieldRules('name')"  label="Nom" placeholder="Nom" required ></v-text-field> 
+                                <v-text-field ref="name" v-model="customer.nom" :rules="fieldRules('name')"  label="Nom" placeholder="Nom" required ></v-text-field> 
                             </v-col>
                             <v-col cols="1" sm="3">
                                 <v-text-field ref="firstName" v-model="customer.firstName" :rules="fieldRules('firstName')"  label="Prénom" placeholder="Prénom" required ></v-text-field> 
@@ -25,14 +25,14 @@
                         </v-row>
                         <v-row justify="center">
                             <v-col cols="1" sm="3">
-                                <v-text-field ref="address" v-model="customer.address.address" :rules="fieldRules('address')" label="Adresse(rue,avenue..)" placeholder="55 Rue du Faubourg Saint-Honoré"  required>{{customer.address.address}}</v-text-field>
+                                <v-text-field ref="address" v-model="customer.address" :rules="fieldRules('address')" label="Adresse(rue,avenue..)" placeholder="55 Rue du Faubourg Saint-Honoré"  required>{{customer.address.address}}</v-text-field>
                             </v-col>
                             <v-col cols="1" sm="3">
-                                <v-text-field ref="postcode" v-model="customer.address.postCode" :rules="fieldRules('postalCode')" label="Code Postal" require placeholder="75008 "></v-text-field>
+                                <v-text-field ref="postcode" v-model="customer.postCode" :rules="fieldRules('postalCode')" label="Code Postal" require placeholder="75008 "></v-text-field>
                                 <v-text-field ref="email" v-model="customer.email" :rules="fieldRules('e-mail')"  label="Email" placeholder="XXXX@XXX.fr" required ></v-text-field> 
                             </v-col>
                             <v-col cols="1" sm="3">
-                                <v-text-field ref="ville" v-model="customer.address.city" :rules="fieldRules('city')" label="Ville" placeholder="Paris" required></v-text-field>
+                                <v-text-field ref="ville" v-model="customer.city" :rules="fieldRules('city')" label="Ville" placeholder="Paris" required></v-text-field>
                                 <v-text-field ref="phone" v-model="customer.phoneNumber" :rules="fieldRules('phone')"  label="Téléphone" placeholder="0380454536" required ></v-text-field> 
                             </v-col>
                         </v-row>
@@ -92,11 +92,11 @@ export default {
             phoneNumber:'',
             sexe:'',
             typeCustomer:'',
-            address:{
-                address:'',
-                postCode:'',
-                city:''
-            }
+            address:'',
+            postCode:'',
+            city:'',
+            _v:"1",
+            isDeleted:false,
         },
         name: '',
         firstName: '',
@@ -198,7 +198,7 @@ export default {
                 if (this.fromPage == 'add') {
                     //rendre l'"appel asynchrone et récup l'id envoyer en base"
                     //ajoute le client en base de données
-                    // this.addCustomer(this.customer);
+                     this.addCustomer(this.customer);
                     // console.log("euhhh")
                     // listeCustomer.push(this.customer)
                     // console.log(listeCustomer)
@@ -211,25 +211,23 @@ export default {
                     this.editCustomer(this.customer);
                     //this.$store.commit('updateListCustomer',this.customer)
                     //ramène à l'affichage courant des clients
-                    this.cancel(1)
+                    //this.cancel(1)
                 }
             }
         },
         //Function permettant de modifier le client en base de données
-        async editCustomer($customer){
-            const result = await axios
-                .post('http://127.0.0.1:8000/api/customer/u/'+$customer._id,$customer)
-                .then()//modifie la liste des clients en local
-                .catch(error => console.log(error));
-            console.log (result);
+        editCustomer($customer){
+            console.log("ID "+$customer._id)
+
+           axios.put('http://localhost:8080/api/customer/update/'+$customer._id,$customer)
+            .then()//modifie la liste des clients en local
+            .catch(error => console.log(error));
         },
         //Function permettant d'ajouter le client en base de données
         async addCustomer($customer){
-        const result = await axios
-            .post('http://127.0.0.1:8000/api/customer/c/'+$customer._id,$customer)
+        axios.post('http://localhost:8080/api/customer/create/',$customer)
             .then(response =>console.log(response))//
             .catch(error => console.log(error));
-        console.log (result);
         }, 
        
     }, 
