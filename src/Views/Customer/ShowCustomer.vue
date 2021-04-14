@@ -32,8 +32,7 @@
 </template>
 
 <script>
-//const axios = require('axios');
-import { mapGetters } from 'vuex'
+const axios = require('axios');
 
 export default {
   name: 'ShowCustomer',
@@ -70,14 +69,17 @@ export default {
         email: '',
         address: ['','',''],
       },
+      customers: [],
     }
-  },
-  computed: {
-    ...mapGetters(['customers'])
   },
   methods : {
     cancel (){
       this.$router.push({name: 'Home'})
+    },
+    index() {
+      axios.get('http://localhost:8080/api/customers')
+      .then(response => (this.customers = response.data, console.log(this.customers), this.load = false))
+      .catch(error => console.log(error));
     },
   },
   remove(){
@@ -88,7 +90,7 @@ export default {
     //this.$router.push({name: 'ShowCustomer'})
   },
   created() {
-    this.load = false
+    this.index();
   },    
 
 }
