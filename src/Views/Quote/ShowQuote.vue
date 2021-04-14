@@ -83,8 +83,8 @@ export default {
   },
   methods : {
     index() {
-      axios.get('http://127.0.0.1:8000/api/quotes')
-      .then(Response => (this.quotes = Response.data.data, this.load = false))
+      axios.get('http://localhost:8080/api/quotes')
+      .then(Response => (this.quotes = Response.data, this.load = false))
       .catch(error => console.log(error));
     },
     cancel (){
