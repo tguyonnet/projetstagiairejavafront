@@ -83,7 +83,7 @@ export default {
   },
   methods : {
     index() {
-      axios.get('http://localhost:8080/api/quotes')
+      axios.get(this.$api + 'quotes')
       .then(Response => (this.quotes = Response.data, this.load = false))
       .catch(error => console.log(error));
     },
@@ -91,7 +91,6 @@ export default {
         this.$router.push({name: 'Home'})
     },
     download() {
-      alert("Téléchargement : En cours de développement");
     },
     showQuote(item) {
       this.dialog = true;

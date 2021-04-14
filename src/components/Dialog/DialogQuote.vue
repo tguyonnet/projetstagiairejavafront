@@ -44,24 +44,6 @@
                 </v-row>
             </v-card-title>
             <v-divider />
-            <v-card-text>
-                <v-data-table 
-                    align-center 
-                    :loading="load" 
-                    loading-text="Veuillez patienter ..." 
-                    :headers="headers" 
-                    :search="search" 
-                    :items="collection" 
-                    :items-per-page="10"
-                    :footer-props="{
-                    'items-per-page-text': '',    
-                    pageText: '{0}-{1} sur {2}',
-                    }"
-                >
-                    
-                </v-data-table>
-            </v-card-text>
-            <v-divider />
             <v-card-actions>
                 <v-spacer></v-spacer>
                 <v-btn text color="#59BD73">Valider</v-btn>
@@ -106,6 +88,7 @@ export default {
                 { text: "P.U.", value: "" },
                 { text: "Total HT", value: "" },
             ],
+            collection: [],
         }
     },
     methods: {
