@@ -9,7 +9,7 @@
                         <v-card-text>Nouveau client
                             <router-link :to="{name: 'AddCustomer', params: {id: ''}}" class="text-decoration-none"><v-btn icon color="#59BD73" text><v-icon medium >mdi-plus-circle</v-icon></v-btn></router-link>
                         </v-card-text>
-                        {{project}}
+
                         <v-row>
                             <v-col cols="12" sm="6">
                                 <v-autocomplete v-model="project.customer_id" :rules="customerRules" :items="customerList" :item-text="itemText" item-value="_id" label="Sélection du client" required></v-autocomplete>
