@@ -90,7 +90,7 @@ export default {
       localStorage.setItem('projectList', JSON.stringify(this.projects))
       this.dialog = false
       //supprime le projet par le back dans la bdd
-      axios.get('http://127.0.0.1:8080/api/project/delete/' + this.itemToDelete._id)
+      axios.delete('http://127.0.0.1:8080/api/project/delete/' + this.itemToDelete._id)
       .then(localStorage.setItem('projectList', JSON.stringify(this.projects)))
       .catch(error => console.log("ERREUR : ", error));
       console.log(this.itemToDelete._id)

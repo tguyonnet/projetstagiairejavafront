@@ -9,9 +9,10 @@
                         <v-card-text>Nouveau client
                             <router-link :to="{name: 'AddCustomer', params: {id: ''}}" class="text-decoration-none"><v-btn icon color="#59BD73" text><v-icon medium >mdi-plus-circle</v-icon></v-btn></router-link>
                         </v-card-text>
+                        {{project}}
                         <v-row>
                             <v-col cols="12" sm="6">
-                                <v-autocomplete v-model="project.customer" :rules="customerRules" :items="customerList" :item-text="itemText" item-value="_id" label="Sélection du client" required></v-autocomplete>
+                                <v-autocomplete v-model="project.customer_id" :rules="customerRules" :items="customerList" :item-text="itemText" item-value="_id" label="Sélection du client" required></v-autocomplete>
                             </v-col>
                             <v-col cols="12" sm="6">
                                 <v-text-field v-model="project.name" :rules="nameRules" label="Libellé du projet" required></v-text-field>
@@ -28,13 +29,13 @@
                                 <v-text-field v-model="project.created_at" label="Date de création" disabled required></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="6">
-                                <v-text-field v-model="project.projectSite.address" :rules="addressRules" label="Adresse de chantier" required></v-text-field>
+                                <v-text-field v-model="project.address" :rules="addressRules" label="Adresse de chantier" required></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="3">
-                                <v-text-field v-model="project.projectSite.postCode" :rules="postCodeRules" label="Code postal" required></v-text-field>
+                                <v-text-field v-model="project.postCode" :rules="postCodeRules" label="Code postal" required></v-text-field>
                             </v-col>
                             <v-col cols="12" sm="3">
-                                <v-text-field v-model="project.projectSite.city" :rules="cityRules" label="Ville" required></v-text-field>
+                                <v-text-field v-model="project.city" :rules="cityRules" label="Ville" required></v-text-field>
                             </v-col>
                         </v-row>
                     </v-container>
@@ -64,13 +65,11 @@ export default {
             project:  {  
                 _id: '',     
                 name: '',
-                projectSite: {
                     address: '',
                     postCode: '',
                     city: '',
-                },
                 dateBeginSite: '',
-                customer: '',
+                customer_id: '',
                 state: '',
                 created_at: new Date().toISOString().substr(0, 10)
             },
@@ -91,7 +90,7 @@ export default {
             dateBeginSiteRules : [v => !!v || 'Ce champ est obligatoire'],
 
             //liste des clients dans le localStorage
-            customerList: JSON.parse(localStorage.getItem('customerList')),
+            customerList: '',
             projectList: JSON.parse(localStorage.getItem('projectList')),
 
             //varaibles date
@@ -120,11 +119,7 @@ export default {
         //Affiche les valaurs d'un champ/s au lieu de l'objet dans la liste déroulante
         itemText(item) {
             let syntax = null;
-            if(item.email == '') {
-                syntax = `${item.name} ${item.firstName}`.toUpperCase();
-            } else {
-                syntax = `${item.name} ${item.firstName}`.toUpperCase() + `, ${item.email} `;
-            }
+            syntax = `${item.nom} ${item.firstName}`.toUpperCase() + `, ${item.email} `;
             return syntax;
         },
 
@@ -138,6 +133,7 @@ export default {
              this.$refs.formProject.validate()
                     if(this.fromPage == 'add') {
                          if(this.$refs.formProject.validate()){
+                             console.log(this.project)
                             this.createProject()
                          }
                     }
@@ -147,10 +143,20 @@ export default {
         // ATTENTION : ajoute le nouveau projet dans local Sotrage mais sans l'_id => F5 pour update via le back
         createProject() {
             this.projectList.push(this.project)
-            axios.post('http://127.0.0.1:8000/api/project/create', this.project)
-            .then((Response) => {console.log(Response)}, localStorage.setItem('projectList', JSON.stringify(this.projectList)))
+            axios.post('http://127.0.0.1:8080/api/project/create', this.project)
+            .then((Response) => {console.log(Response)})
         },
-    }, 
+
+                indexCustomers() {
+            axios.get('http://127.0.0.1:8080/api/customers')
+            .then((Response) => this.customerList = Response.data)
+        },
+    },
+    
+    created() {
+        this.indexCustomers()
+        console.log(this.customerList)
+    },
 
     //variable globales de l'app FormProject
     props: {
