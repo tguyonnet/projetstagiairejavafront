@@ -85,6 +85,7 @@
                     <v-text-field v-model="search" append-icon="mdi-magnify" label="Rechercher" single-line hide-details class="ml-15 mr-15"></v-text-field>
                   </v-card-title>
                   <v-data-table :headers="headersProjects" :items="projectsOneCustomer" item-key="_id" multi-sort loading ="load" :loading-text="textLoad" :search="search">
+                    <template v-slot:[`item.dateBeginSite`]="{ item }">{{ moment(item.dateBeginSite).format('DD/MM/YYYY') }}</template>
                     <template v-slot:[`item.actions`]="{ item }">
                       <router-link :to="{name: 'DetailProject', params: {id: item._id, project: item}}" class="text-decoration-none"><v-btn icon color="#59BD73" text><v-icon small>fa-eye</v-icon></v-btn></router-link>
                     </template>
@@ -117,6 +118,7 @@
 
 <script>
 const axios = require('axios');
+import moment from 'moment';
 
 export default {
   name: 'DetailCustomer',
@@ -164,6 +166,11 @@ export default {
       this.loading = false 
   },
   methods: {
+
+    moment: function (date) {
+      return moment(date);
+    },
+
     getAllProject(){
 
       //retourne la liste des projets d'un client
