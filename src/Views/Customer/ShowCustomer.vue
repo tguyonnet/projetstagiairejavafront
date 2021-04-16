@@ -24,7 +24,7 @@
           <template v-slot:[`item.actions`]="{ item }">
                 <router-link :to="{name: 'DetailCustomer', params: {customer:item}}" class="text-decoration-none"><v-btn icon color="#59BD73" text><v-icon small>fa-eye</v-icon></v-btn></router-link>
                 <router-link :to="{name: 'EditCustomer', params: {customer:item}}" class="text-decoration-none"  ><v-btn icon color="#59BD73" text><v-icon small>fa-pencil-alt</v-icon></v-btn></router-link>
-                <v-btn icon color="#59BD73" @click="remove()" text><v-icon small>fa-trash-alt</v-icon></v-btn>
+                <v-btn icon color="#59BD73" @click="deleteDialog(item)" text><v-icon small>fa-trash-alt</v-icon> </v-btn>
           </template>
           </v-data-table>
         </v-card>
@@ -80,6 +80,19 @@ export default {
       axios.get('http://localhost:8080/api/customers')
       .then(response => (this.customers = response.data, console.log(this.customers), this.load = false))
       .catch(error => console.log(error));
+    },
+    //affichage de la fenetre suppression
+   deleteDialog(item) {
+     //recupere un seul projet
+      const index = this.customers.indexOf(item).toString() 
+      //supprime la ligne sur le front   
+      this.customers.splice(index, 1)
+      this.dialog = false
+      //supprime le projet par le back dans la bdd
+      axios.delete('http://localhost:8080/api/customer/delete/' + item._id)
+        .then()
+        .catch(error => console.log("ERREUR : ", error));
+        console.log(item._id)
     },
   },
   remove(){
