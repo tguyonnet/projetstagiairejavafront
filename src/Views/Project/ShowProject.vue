@@ -11,6 +11,9 @@
       <!-- Liste récup des données MongoDB + searchBar + Pagination + Loading Bar -->
       <v-data-table align-center :loading="load" loading-text="Veuillez patienter ..." :headers="headers" :search="search" :items="projects" :items-per-page="10" :footer-props="{'items-per-page-text':'lignes par page'}">       
         <!-- Ajout champ Actions -->
+                <template v-slot:[`item.created_at`]="{ item }">{{ moment(item.created_at).format('DD/MM/YYYY') }}</template>
+                <template v-slot:[`item.dateBeginSite`]="{ item }">{{ moment(item.dateBeginSite).format('DD/MM/YYYY') }}</template>
+
         <template v-slot:[`item.actions`]="{ item }">
            <!-- <v-btn icon v-model="item.actions" color="#59BD73" v-for="link in links" :key="link.icon" router :to="link.route /*+ projects[0]._id*/" text class="my-1 text-decoration-none"><v-icon small>{{ link.icon }}</v-icon></v-btn> -->
             <router-link :to="{name: 'DetailProject', params: {id: item._id, project: item}}" class="text-decoration-none"><v-btn icon color="#59BD73" text><v-icon small>fa-eye</v-icon></v-btn></router-link>
@@ -35,6 +38,7 @@
 
 <script>
 import axios from 'axios';
+import moment from 'moment';
 
 export default {
   name: 'ShowProject',
@@ -74,6 +78,10 @@ export default {
       this.load = false
    },
 
+    moment: function (date) {
+      return moment(date);
+    },
+
     //affichage de la fenetre suppression
     showDialog(item) {
       this.itemToDelete = item
@@ -100,6 +108,7 @@ export default {
   created() {
     this.indexProject();
     console.log('projets page projects :', this.projects)
+    console.log(this.moment(this.projects.created_at).format('DD/MM/YYYY'))
   },
 }
 
