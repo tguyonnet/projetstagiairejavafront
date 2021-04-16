@@ -53,13 +53,15 @@
 </template>
 
 <script>
+import moment from 'moment';
+
 export default {
     name: 'DialogQuote',
     data() {
         return {
             header: [
                 { text: "DEVIS N° ", variable: this.quote._id },
-                { text: "DATE : ", variable: this.quote.created_at },
+                { text: "DATE : ", variable: moment(this.quote.created_at).format('DD/MM/YYYY') },
                 { text: "CLIENT N° ", variable: this.quote.customer._id },
                 { text: "PROJET N° ", variable: this.quote.project._id },
                 { text: "PROJET : ", variable: this.quote.project.name },
@@ -92,6 +94,10 @@ export default {
         }
     },
     methods: {
+        moment: function (date) {
+           return moment(date);
+        },
+
     },
     mounted() {
         this.load = false
