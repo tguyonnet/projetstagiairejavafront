@@ -26,11 +26,12 @@
           pageText: '{0}-{1} sur {2}',
         }"
       >  
+
+        <template v-slot:[`item.created_at`]="{ item }">{{ moment(item.created_at).format('DD/MM/YYYY') }}</template>
         <!-- client -->
         <template v-slot:[`item.customer_name`]="{ item }">{{ item.customer.firstName }} {{ item.customer.name }}</template>
         <!-- Ajout champ Actions -->
         <template v-slot:[`item.actions`]="{ item }">
-            <!-- <router-link :to="{ name: 'DetailQuote', params: { id: item._id, quote: item } }" class="text-decoration-none"><v-btn icon color="#59BD73"><v-icon>mdi-eye</v-icon></v-btn></router-link> -->
             <!-- <router-link :to="{ name: 'EditQuote', params: { id: item._id, quote: item  } }" class="text-decoration-none"><v-btn icon color="#59BD73" text><v-icon small>fa-pencil-alt</v-icon></v-btn></router-link> -->
             <v-btn icon color="#59BD73" @click.stop="showQuote(item)" ><v-icon>mdi-eye</v-icon></v-btn>
             <v-btn icon color="#59BD73" @click="download()"><v-icon>mdi-download</v-icon></v-btn>
@@ -52,6 +53,7 @@
 
 <script>
 import axios from 'axios';
+import moment from 'moment';
 import DialogQuote from '../../components/Dialog/DialogQuote'
 
 export default {
@@ -90,7 +92,8 @@ export default {
     cancel (){
         this.$router.push({name: 'Home'})
     },
-    download() {
+    moment: function (date) {
+      return moment(date);
     },
     showQuote(item) {
       this.dialog = true;
