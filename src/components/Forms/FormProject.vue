@@ -2,7 +2,7 @@
     <div v-if="!loading">
         <div id="app">
             <v-btn left absolute icon @click="back()"><v-icon large>mdi-undo-variant</v-icon></v-btn>
-            <h1>{{ title }}</h1> 
+            <h1>{{ title }}</h1>
              <v-card flat ma-5>
                 <v-form ref="formProject" v-model="valid" lazy-validation @submit.prevent="submit">
                     <v-container fluid>
@@ -12,7 +12,7 @@
 
                         <v-row>
                             <v-col cols="12" sm="6">
-                                <v-autocomplete v-model="project.customer_id" :rules="customerRules" :items="customerList" :item-text="itemText" item-value="_id" label="Sélection du client" required></v-autocomplete>
+                                <v-autocomplete v-model="project.customer._id" :rules="customerRules" :items="customerList" :item-text="itemText" item-value="_id" label="Sélection du client" required></v-autocomplete>
                             </v-col>
                             <v-col cols="12" sm="6">
                                 <v-text-field v-model="project.name" :rules="nameRules" label="Libellé du projet" required></v-text-field>
@@ -69,8 +69,9 @@ export default {
                     postCode: '',
                     city: '',
                 dateBeginSite: '',
-                customer_id: '',
-                state: '',
+                customer: {
+                    _id: null,
+                },
                 created_at: new Date().toISOString().substr(0, 10)
             },
 
@@ -147,7 +148,7 @@ export default {
             .then((Response) => {console.log(Response)})
         },
 
-                indexCustomers() {
+        indexCustomers() {
             axios.get('http://127.0.0.1:8080/api/customers')
             .then((Response) => this.customerList = Response.data)
         },

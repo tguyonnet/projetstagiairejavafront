@@ -57,6 +57,10 @@
                     </v-card-actions>
                 </v-card>
             </v-form> 
+            <v-snackbar justify-center v-model="snackbar" absolute top right color="#59BD73">
+                <span>Nouveau client créé </span>
+                <v-icon dark> mdi-checkbox-marked-circle</v-icon>
+            </v-snackbar>
         </div>
     </div>
 </template>
@@ -71,6 +75,7 @@ export default {
     return { 
         valid:true,
         loading: true,
+        snackbar: false,
         formHasErrors: false,
         leCustomer:{
             name: '',
@@ -215,19 +220,25 @@ export default {
                 }
             }
         },
+
+        requestResponse (response) {
+            console.log(response)
+            this.snackbar = true
+        },
+
         //Function permettant de modifier le client en base de données
         editCustomer($customer){
             console.log("ID "+$customer._id)
 
-           axios.put('http://localhost:8080/api/customer/update/'+$customer._id,$customer)
-            .then()//modifie la liste des clients en local
-            .catch(error => console.log(error));
+            axios.put('http://localhost:8080/api/customer/update/'+$customer._id,$customer)
+                .then()//modifie la liste des clients en local
+                .catch(error => console.log(error));
         },
         //Function permettant d'ajouter le client en base de données
-        async addCustomer($customer){
-        axios.post('http://localhost:8080/api/customer/create/',$customer)
-            .then(response =>console.log(response))//
-            .catch(error => console.log(error));
+        addCustomer($customer){
+            axios.post('http://localhost:8080/api/customer/create/',$customer)
+                .then(response => (this.requestResponse(response)))
+                .catch(error => console.log(error));
         }, 
        
     }, 
